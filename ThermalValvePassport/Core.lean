@@ -42,7 +42,6 @@ theorem weightedBracket_dressed
   simp only [weightedBracket, dressed, secondDifference]
   simp only [pow_succ]
   field_simp [hq]
-  ring
 
 /-- Boundary trace ratio of an observed dressed sequence. -/
 def thermalTraceRatio (q : K) (x : ℕ → K) : K :=
@@ -60,7 +59,6 @@ theorem thermalTraceRatio_dressed
   unfold thermalTraceRatio dressed
   simp only [pow_zero, pow_one, mul_one]
   field_simp [hq, hc, hg0]
-  ring
 
 /-- The normalized weighted curvature is the normalized ordinary curvature. -/
 theorem thermalCurvature_dressed
@@ -74,7 +72,6 @@ theorem thermalCurvature_dressed
   simp only [pow_zero, mul_one]
   have hpow : q ^ (k + 1) ≠ 0 := pow_ne_zero _ hq
   field_simp [hpow, hc, hg0]
-  ring
 
 /-- The two-channel passport: initial trace and all normalized curvatures. -/
 @[ext]
@@ -87,12 +84,12 @@ namespace Passport
 variable (K)
 
 /-- Passport extracted from an observation using a supplied geometric ratio. -/
-def ofObservation [Field K] (q : K) (x : ℕ → K) : Passport K where
+def ofObservation (q : K) (x : ℕ → K) : Passport K where
   trace := thermalTraceRatio q x
   curvature := thermalCurvature q x
 
 /-- Canonical passport of a structural sequence, normalized by its ground value. -/
-def normalized [Field K] (g : ℕ → K) : Passport K where
+def normalized (g : ℕ → K) : Passport K where
   trace := g 1 / g 0
   curvature := fun k => secondDifference g k / g 0
 

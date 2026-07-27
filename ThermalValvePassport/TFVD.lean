@@ -41,25 +41,28 @@ theorem weightedSecondDifference_telescope
       q ^ (n - 1 - j) * weightedSecondDifference q x j) =
         weightedFirstDifference q x n -
           q ^ n * weightedFirstDifference q x 0 := by
-  let d : ℕ → K := fun k => weightedFirstDifference q x k
-  let F : ℕ → K := fun k => q ^ (n - k) * d k
-  calc
-    (∑ j ∈ Finset.range n,
-      q ^ (n - 1 - j) * weightedSecondDifference q x j) =
-        ∑ j ∈ Finset.range n, (F (j + 1) - F j) := by
-          apply Finset.sum_congr rfl
-          intro j hj
-          have hjlt : j < n := Finset.mem_range.mp hj
-          have hleft : n - (j + 1) = n - 1 - j := by omega
-          have hright : n - j = (n - 1 - j) + 1 := by omega
-          dsimp [F, d, weightedSecondDifference]
-          rw [hleft, hright, pow_succ]
-          ring
-    _ = F (0 + n) - F 0 := by
-      simpa using (sum_range_forwardDifference F 0 n)
-    _ = weightedFirstDifference q x n -
-          q ^ n * weightedFirstDifference q x 0 := by
-      simp [F, d]
+  induction n with
+  | zero =>
+      simp [weightedFirstDifference]
+  | succ n ih =>
+      rw [Finset.sum_range_succ]
+      simp only [Nat.add_sub_cancel, Nat.sub_self, pow_zero, one_mul]
+      have hprefix :
+          (∑ j ∈ Finset.range n,
+            q ^ (n - j) * weightedSecondDifference q x j) =
+            q * (∑ j ∈ Finset.range n,
+              q ^ (n - 1 - j) * weightedSecondDifference q x j) := by
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro j hj
+        have hjlt : j < n := Finset.mem_range.mp hj
+        have hsub : n - j = (n - 1 - j) + 1 := by omega
+        rw [hsub, pow_succ]
+        ring
+      rw [hprefix, ih]
+      unfold weightedSecondDifference
+      rw [pow_succ]
+      ring
 
 /-- Causal recurrence for the finite Green sum. -/
 theorem weightedGreenSum_succ
@@ -162,7 +165,6 @@ theorem reconstruct_normalized
             ((n - 1 - j : ℕ) : K) * secondDifference g j) / g 0 := by
               rw [← Finset.sum_div]
   simp only [reconstruct, normalized]
-  dsimp
   rw [hsum]
   calc
     1 + (n : K) * (g 1 / g 0 - 1) +

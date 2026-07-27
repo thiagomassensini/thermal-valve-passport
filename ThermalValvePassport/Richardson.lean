@@ -12,7 +12,7 @@ namespace ThermalValvePassport
 
 noncomputable section
 
-variable {K : Type*} [CommField K]
+variable {K : Type*} [Field K]
 
 /-- Affine observation law at scale `h`. -/
 def affineObservation (h ε : K) : K :=

@@ -2,3 +2,4 @@ import ThermalValvePassport.Core
 import ThermalValvePassport.TFVD
 import ThermalValvePassport.Cutoff
 import ThermalValvePassport.Richardson
+import ThermalValvePassport.Reflected

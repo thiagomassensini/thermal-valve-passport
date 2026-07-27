@@ -15,14 +15,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: leanprover/lean-action@v1
+      - name: Set up Lean
+        uses: leanprover/lean-action@v1
         with:
-          build: true
-          build-args: "--wfail"
-          use-mathlib-cache: true
-          leanchecker: true
-          nanoda: true
-          nanoda-allow-sorry: false
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: false
+      - name: Build with captured diagnostics
+        id: build
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          lake update > build.log 2>&1
+          setup_status=$?
+          if [ "$setup_status" -eq 0 ]; then
+            lake exe cache get >> build.log 2>&1
+            setup_status=$?
+          fi
+          if [ "$setup_status" -eq 0 ]; then
+            lake build --wfail >> build.log 2>&1
+            setup_status=$?
+          fi
+          tail -n 250 build.log
+          echo "exit_code=${setup_status}" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-build-log
+          path: build.log
+      - name: Enforce successful build
+        shell: bash
+        run: test "${{ steps.build.outputs.exit_code }}" = "0"
       - name: Reject proof placeholders
         shell: bash
         run: |
@@ -30,6 +58,17 @@ jobs:
             echo 'Proof placeholder or user axiom found.'
             exit 1
           fi
+      - name: Independent kernel checks
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: false
+          leanchecker: true
+          nanoda: true
+          nanoda-allow-sorry: false
 
   release:
     name: Tag and GitHub release

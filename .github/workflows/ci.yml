@@ -1,0 +1,63 @@
+name: Lean CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and kernel checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          build: true
+          build-args: "--wfail"
+          use-mathlib-cache: true
+          leanchecker: true
+          nanoda: true
+          nanoda-allow-sorry: false
+      - name: Reject proof placeholders
+        shell: bash
+        run: |
+          if git grep -nE '(^|[^A-Za-z])(sorry|admit|axiom)([^A-Za-z]|$)' -- '*.lean'; then
+            echo 'Proof placeholder or user axiom found.'
+            exit 1
+          fi
+
+  release:
+    name: Tag and GitHub release
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create version tag and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(tr -d '[:space:]' < VERSION)"
+          TAG="v${VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            git tag -a "${TAG}" -m "Thermal Valve Passport ${TAG}"
+            git push origin "${TAG}"
+          fi
+          if ! gh release view "${TAG}" >/dev/null 2>&1; then
+            gh release create "${TAG}" \
+              --title "Thermal Valve Passport ${TAG}" \
+              --notes-file RELEASE_NOTES.md
+          fi

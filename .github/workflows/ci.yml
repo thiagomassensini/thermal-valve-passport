@@ -69,11 +69,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      statuses: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Create version tag and release
+      - name: Create or verify versioned release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -81,14 +82,27 @@ jobs:
           set -euo pipefail
           VERSION="$(tr -d '[:space:]' < VERSION)"
           TAG="v${VERSION}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if ! git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
-            git tag -a "${TAG}" -m "Thermal Valve Passport ${TAG}"
-            git push origin "${TAG}"
-          fi
+
           if ! gh release view "${TAG}" >/dev/null 2>&1; then
-            gh release create "${TAG}" \
-              --title "Thermal Valve Passport ${TAG}" \
-              --notes-file RELEASE_NOTES.md
+            if git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+              gh release create "${TAG}" \
+                --verify-tag \
+                --title "Thermal Valve Passport ${TAG}" \
+                --notes-file RELEASE_NOTES.md
+            else
+              gh release create "${TAG}" \
+                --target "${GITHUB_SHA}" \
+                --title "Thermal Valve Passport ${TAG}" \
+                --notes-file RELEASE_NOTES.md
+            fi
           fi
+
+          RELEASE_URL="$(gh release view "${TAG}" --json url --jq .url)"
+          gh api --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -f state=success \
+            -f context="release/${TAG}" \
+            -f description="GitHub release ${TAG} verified" \
+            -f target_url="${RELEASE_URL}"
+          echo "Verified release: ${RELEASE_URL}"

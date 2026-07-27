@@ -39,12 +39,12 @@ jobs:
           }
 
           fetch record_json 'https://www.hepdata.net/record/ins2755369?version=1&format=json'
+          fetch table3_ajax 'https://www.hepdata.net/record/data/tabledata/1811120/1'
+          fetch table4_ajax 'https://www.hepdata.net/record/data/tabledata/1811121/1'
+          fetch table3_header 'https://www.hepdata.net/record/data/147195/1811120/1/0'
+          fetch table4_header 'https://www.hepdata.net/record/data/147195/1811121/1/0'
           fetch table3_csv_v1 'https://www.hepdata.net/download/table/ins2755369/Table%203/1/csv'
           fetch table4_csv_v1 'https://www.hepdata.net/download/table/ins2755369/Table%204/1/csv'
-          fetch table3_yaml_v1 'https://www.hepdata.net/download/table/ins2755369/Table%203/1/yaml'
-          fetch table4_yaml_v1 'https://www.hepdata.net/download/table/ins2755369/Table%204/1/yaml'
-          fetch table3_csv_latest 'https://www.hepdata.net/download/table/ins2755369/Table%203/csv'
-          fetch table4_csv_latest 'https://www.hepdata.net/download/table/ins2755369/Table%204/csv'
 
           python3 - <<'PY'
           from pathlib import Path
@@ -64,14 +64,16 @@ jobs:
           (root / 'probe_report.json').write_text(json.dumps(report, indent=2))
           print(json.dumps(report, indent=2))
 
-          record = root / 'record_json.body'
-          if record.exists():
+          for name in ('record_json', 'table3_ajax', 'table4_ajax', 'table3_header', 'table4_header'):
+              path = root / f'{name}.body'
+              if not path.exists():
+                  continue
               try:
-                  data = json.loads(record.read_text())
-                  (root / 'record_keys.txt').write_text('\n'.join(sorted(data.keys())))
-                  print('record keys:', sorted(data.keys()))
+                  data = json.loads(path.read_text())
+                  (root / f'{name}.keys.txt').write_text('\n'.join(sorted(data.keys())))
+                  print(name, 'keys:', sorted(data.keys()))
               except Exception as exc:
-                  print('record JSON parse failed:', exc)
+                  print(name, 'JSON parse failed:', exc)
           PY
 
       - name: Upload probe and any public data retrieved

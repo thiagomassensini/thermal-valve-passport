@@ -1,0 +1,45 @@
+name: QGP HEPData pilot
+
+on:
+  push:
+    branches:
+      - experiment/qgp-star-hepdata
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-star-hepdata:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch STAR thermal-dielectron tables
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qgp-hepdata
+          curl --fail --location --retry 5 --retry-all-errors \
+            'https://www.hepdata.net/download/table/ins2755369/Table%203/csv' \
+            -o qgp-hepdata/table3.csv
+          curl --fail --location --retry 5 --retry-all-errors \
+            'https://www.hepdata.net/download/table/ins2755369/Table%204/csv' \
+            -o qgp-hepdata/table4.csv
+          curl --fail --location --retry 5 --retry-all-errors \
+            'https://www.hepdata.net/download/table/ins2755369/Table%203/yaml' \
+            -o qgp-hepdata/table3.yaml
+          curl --fail --location --retry 5 --retry-all-errors \
+            'https://www.hepdata.net/download/table/ins2755369/Table%204/yaml' \
+            -o qgp-hepdata/table4.yaml
+          for file in qgp-hepdata/*; do
+            test -s "$file"
+            echo "===== $file ====="
+            file "$file"
+            head -n 12 "$file" || true
+          done
+
+      - name: Upload raw public data
+        uses: actions/upload-artifact@v4
+        with:
+          name: star-qgp-hepdata-147195
+          path: qgp-hepdata/
+          if-no-files-found: error
+          retention-days: 7

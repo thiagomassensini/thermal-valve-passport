@@ -56,9 +56,8 @@ theorem cutoffCommutator_leftBoundary
       -q⁻¹ * x (k + 2) := by
   have hk : k < k + 2 := by omega
   have hk1 : k + 1 < k + 2 := by omega
-  have hk2 : ¬ k + 2 < k + 2 := by omega
   simp [cutoffCommutator, weightedBracketOutput, weightedBracket,
-    truncate, hk, hk1, hk2]
+    truncate, hk, hk1]
   ring
 
 /-- Second boundary coordinate: the last visible value enters with `q`. -/
@@ -67,10 +66,9 @@ theorem cutoffCommutator_rightBoundary
     cutoffCommutator q (k + 2) x (k + 2) =
       q * x (k + 1) := by
   have hk1 : k + 1 < k + 2 := by omega
-  have hk2 : ¬ k + 2 < k + 2 := by omega
   have hk3 : ¬ k + 3 < k + 2 := by omega
   simp [cutoffCommutator, weightedBracketOutput, weightedBracket,
-    truncate, hk1, hk2, hk3]
+    truncate, hk1, hk3]
 
 /-- After the two boundary coordinates, the commutator vanishes again. -/
 theorem cutoffCommutator_exterior
@@ -79,10 +77,9 @@ theorem cutoffCommutator_exterior
   have h0 : M ≤ M + r := by omega
   have h1 : M ≤ M + r + 1 := by omega
   have h2 : M ≤ M + r + 2 := by omega
-  have hout : M ≤ M + r + 1 := by omega
   simp [cutoffCommutator, weightedBracketOutput, weightedBracket,
     truncate, Nat.not_lt.mpr h0, Nat.not_lt.mpr h1,
-    Nat.not_lt.mpr h2, Nat.not_lt.mpr hout]
+    Nat.not_lt.mpr h2]
 
 /-- Exact correction of the last interior bracket coordinate. -/
 theorem exact_leftBoundary_correction

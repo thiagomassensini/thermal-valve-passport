@@ -174,7 +174,6 @@ theorem reconstruct_normalized
         ∑ j ∈ Finset.range n,
           ((n - 1 - j : ℕ) : K) * secondDifference g j) / g 0 := by
             field_simp [hg0]
-            ring
     _ = g n / g 0 := by rw [hformula]
 
 /-- The observed passport reconstructs the underlying structure up to scale. -/

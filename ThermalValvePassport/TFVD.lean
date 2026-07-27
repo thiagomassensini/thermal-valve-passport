@@ -14,7 +14,7 @@ namespace ThermalValvePassport
 
 noncomputable section
 
-variable {K : Type*} [CommField K]
+variable {K : Type*} [Field K]
 
 /-- Weighted second difference written as a difference of first differences. -/
 def weightedSecondDifference (q : K) (x : ℕ → K) (n : ℕ) : K :=

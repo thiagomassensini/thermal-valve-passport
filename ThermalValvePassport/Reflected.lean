@@ -82,10 +82,15 @@ theorem reflectedBracket_reflectedThermalKernel
     reflectedBracket (reflectedLambda q)
       (fun k => reflectedThermalKernel q N k) n = 0 := by
   let scale : K := (1 - q ^ N)⁻¹
-  change reflectedBracket (reflectedLambda q)
-      (fun k => scale * q ^ k + (scale * q ^ N) * (q⁻¹) ^ k) n = 0
-  simpa [reflectedReturn] using
-    reflectedBracket_reflectedReturn q scale (scale * q ^ N) hq n
+  have hfun :
+      (fun k => reflectedThermalKernel q N k) =
+        reflectedReturn q scale (scale * q ^ N) := by
+    funext k
+    unfold reflectedThermalKernel reflectedReturn scale
+    rw [div_eq_mul_inv]
+    ring
+  rw [hfun]
+  exact reflectedBracket_reflectedReturn q scale (scale * q ^ N) hq n
 
 /-- Exact mismatch of a thermal kernel `qᵢ` when read through a reference
 coefficient `q`. -/

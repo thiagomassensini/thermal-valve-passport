@@ -4,7 +4,7 @@ import Mathlib
 # Core algebra of the Thermal Valve Passport
 
 The declarations in this file are independent of any physical model.  They are
-stated over an arbitrary commutative field and describe sequences of the form
+stated over an arbitrary field and describe sequences of the form
 
 `x k = c * q^k * g k`.
 
@@ -16,7 +16,7 @@ namespace ThermalValvePassport
 
 noncomputable section
 
-variable {K : Type*} [CommField K]
+variable {K : Type*} [Field K]
 
 /-- Ordinary forward second difference. -/
 def secondDifference (g : ℕ → K) (k : ℕ) : K :=
@@ -87,12 +87,12 @@ namespace Passport
 variable (K)
 
 /-- Passport extracted from an observation using a supplied geometric ratio. -/
-def ofObservation (q : K) (x : ℕ → K) : Passport K where
+def ofObservation [Field K] (q : K) (x : ℕ → K) : Passport K where
   trace := thermalTraceRatio q x
   curvature := thermalCurvature q x
 
 /-- Canonical passport of a structural sequence, normalized by its ground value. -/
-def normalized (g : ℕ → K) : Passport K where
+def normalized [Field K] (g : ℕ → K) : Passport K where
   trace := g 1 / g 0
   curvature := fun k => secondDifference g k / g 0
 

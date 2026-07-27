@@ -15,31 +15,66 @@ jobs:
   fetch-star-hepdata:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch STAR thermal-dielectron tables
+      - name: Probe and fetch STAR thermal-dielectron tables
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p qgp-hepdata
-          curl --fail --location --retry 5 --retry-all-errors \
-            'https://www.hepdata.net/download/table/ins2755369/Table%203/csv' \
-            -o qgp-hepdata/table3.csv
-          curl --fail --location --retry 5 --retry-all-errors \
-            'https://www.hepdata.net/download/table/ins2755369/Table%204/csv' \
-            -o qgp-hepdata/table4.csv
-          curl --fail --location --retry 5 --retry-all-errors \
-            'https://www.hepdata.net/download/table/ins2755369/Table%203/yaml' \
-            -o qgp-hepdata/table3.yaml
-          curl --fail --location --retry 5 --retry-all-errors \
-            'https://www.hepdata.net/download/table/ins2755369/Table%204/yaml' \
-            -o qgp-hepdata/table4.yaml
-          for file in qgp-hepdata/*; do
-            test -s "$file"
-            echo "===== $file ====="
-            file "$file"
-            head -n 12 "$file" || true
-          done
+          UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126 Safari/537.36'
+          REF='https://www.hepdata.net/record/ins2755369'
 
-      - name: Upload raw public data
+          fetch() {
+            local name="$1"
+            local url="$2"
+            echo "Fetching $url"
+            curl --location --silent --show-error \
+              --user-agent "$UA" \
+              --referer "$REF" \
+              --header 'Accept: application/json,text/csv,text/yaml,text/plain,*/*' \
+              --dump-header "qgp-hepdata/${name}.headers" \
+              --write-out '%{http_code}\n' \
+              "$url" \
+              --output "qgp-hepdata/${name}.body" \
+              > "qgp-hepdata/${name}.status" || true
+          }
+
+          fetch record_json 'https://www.hepdata.net/record/ins2755369?version=1&format=json'
+          fetch table3_csv_v1 'https://www.hepdata.net/download/table/ins2755369/Table%203/1/csv'
+          fetch table4_csv_v1 'https://www.hepdata.net/download/table/ins2755369/Table%204/1/csv'
+          fetch table3_yaml_v1 'https://www.hepdata.net/download/table/ins2755369/Table%203/1/yaml'
+          fetch table4_yaml_v1 'https://www.hepdata.net/download/table/ins2755369/Table%204/1/yaml'
+          fetch table3_csv_latest 'https://www.hepdata.net/download/table/ins2755369/Table%203/csv'
+          fetch table4_csv_latest 'https://www.hepdata.net/download/table/ins2755369/Table%204/csv'
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          root = Path('qgp-hepdata')
+          report = []
+          for status in sorted(root.glob('*.status')):
+              name = status.stem
+              code = status.read_text().strip()
+              body = root / f'{name}.body'
+              size = body.stat().st_size if body.exists() else 0
+              preview = ''
+              if body.exists():
+                  preview = body.read_text(errors='replace')[:500].replace('\n', ' ')
+              report.append({'name': name, 'status': code, 'bytes': size, 'preview': preview})
+          (root / 'probe_report.json').write_text(json.dumps(report, indent=2))
+          print(json.dumps(report, indent=2))
+
+          record = root / 'record_json.body'
+          if record.exists():
+              try:
+                  data = json.loads(record.read_text())
+                  (root / 'record_keys.txt').write_text('\n'.join(sorted(data.keys())))
+                  print('record keys:', sorted(data.keys()))
+              except Exception as exc:
+                  print('record JSON parse failed:', exc)
+          PY
+
+      - name: Upload probe and any public data retrieved
         uses: actions/upload-artifact@v4
         with:
           name: star-qgp-hepdata-147195

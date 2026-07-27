@@ -12,7 +12,7 @@ namespace ThermalValvePassport
 
 noncomputable section
 
-variable {K : Type*} [CommField K]
+variable {K : Type*} [Field K]
 
 /-- Prefix cutoff: preserve coordinates below `M` and zero the rest. -/
 def truncate (M : ℕ) (x : ℕ → K) (n : ℕ) : K :=

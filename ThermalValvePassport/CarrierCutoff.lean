@@ -40,9 +40,8 @@ theorem carrierCutoffCommutator_firstBoundary
       -(w (k + 1) / w (k + 2)) * x (k + 2) := by
   have hk : k < k + 2 := by omega
   have hk1 : k + 1 < k + 2 := by omega
-  have hk2 : ¬ k + 2 < k + 2 := by omega
   simp [carrierCutoffCommutator, carrierBracket, truncate,
-    hk, hk1, hk2]
+    hk, hk1]
   ring
 
 /-- At the second boundary stencil, the two future values are missing. -/
@@ -52,11 +51,9 @@ theorem carrierCutoffCommutator_secondBoundary
       2 * x (k + 2) -
         (w (k + 2) / w (k + 3)) * x (k + 3) := by
   have hk1 : k + 1 < k + 2 := by omega
-  have hk2 : ¬ k + 2 < k + 2 := by omega
   have hk3 : ¬ k + 3 < k + 2 := by omega
   simp [carrierCutoffCommutator, carrierBracket, truncate,
-    hk1, hk2, hk3]
-  ring
+    hk1, hk3]
 
 /-- At and after the cutoff, both bracketed cutoff and cutoff bracket vanish. -/
 theorem carrierCutoffCommutator_exterior
@@ -137,9 +134,12 @@ theorem carrierCutoffCommutator_geometric
     carrierCutoffCommutator (geometricCarrier q) M x k =
       weightedBracket q (truncate M x) k -
         truncate M (weightedBracket q x) k := by
+  have hbracket :
+      carrierBracket (geometricCarrier q) x = weightedBracket q x := by
+    funext n
+    exact carrierBracket_geometric q x n hq
   unfold carrierCutoffCommutator
-  rw [carrierBracket_geometric q (truncate M x) k hq,
-    carrierBracket_geometric q x k hq]
+  rw [carrierBracket_geometric q (truncate M x) k hq, hbracket]
 
 end
 

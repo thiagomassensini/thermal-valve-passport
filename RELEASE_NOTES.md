@@ -1,50 +1,95 @@
-# Thermal Valve Passport v0.1.2
+# Thermal Valve Passport v0.2.0
 
-Targeted Markdown-rendering patch for the independent Lean 4 formalization of the Thermal Valve Passport.
+Carrier-covariant extension and falsification guardrails for the independent
+Lean 4 formalization of the Thermal Valve Passport.
 
-## Multiline mathematics
+## Arbitrary carriers
 
-- keeps short display equations in the existing `$$...$$` form;
-- converts only multiline display equations to GitHub's fenced `math` syntax;
-- fixes the formulas that were being split into headings and raw LaTeX on narrow web layouts;
-- preserves every theorem statement, formula, link, and explanatory paragraph.
+The geometric carrier $q^k$ is generalized to any nonzero sequence $w_k$.
+For
 
-The corrected multiline displays include the completeness theorem,
+$$
+x_k=c\,w_k g_k,
+$$
+
+the new bracket
 
 ```math
-\operatorname{reconstruct}\!\left(\mathcal P_q(cq^{\bullet}g),n\right)
+B_wx(k)
 =
-\frac{g_n}{g_0},
+\frac{w_{k+1}}{w_{k+2}}x_{k+2}
+-2x_{k+1}
++\frac{w_{k+1}}{w_k}x_k
 ```
 
-the scalar TFVD reconstruction,
+obeys
+
+```math
+B_wx(k)=c\,w_{k+1}\Delta^2g(k).
+```
+
+The carrier trace and normalized curvature recover $g_1/g_0$ and
+$\Delta^2g(k)/g_0$. The existing passport reconstruction therefore remains
+complete for non-geometric carriers.
+
+## Carrier-misspecification guardrail
+
+If an observation uses the actual carrier $w$ but is analyzed with a supplied
+carrier $\widetilde w$, Lean proves
+
+```math
+\mathcal P_{\widetilde w}(c\,w_{\bullet}g)
+=
+\mathcal P_{\mathrm{norm}}\!\left(
+\frac{w_{\bullet}}{\widetilde w_{\bullet}}g
+\right).
+```
+
+An incorrect carrier is not silently removed. Its exact ratio to the actual
+carrier becomes part of the recovered structure.
+
+## Carrier-covariant TFVD
+
+The finite reconstruction is generalized to
 
 ```math
 x_n
 =
-q^n\left(x_0+n\,d_qx(0)\right)
-+
-\sum_{j<n}(n-1-j)q^{n-1-j}B_qx(j),
+w_n\left[
+\frac{x_0}{w_0}
++n\left(\frac{x_1}{w_1}-\frac{x_0}{w_0}\right)
++\sum_{j<n}(n-1-j)\frac{B_wx(j)}{w_{j+1}}
+\right].
 ```
 
-and the connected Richardson identity,
+Specialization to $w_k=q^k$ agrees with the original geometric bracket, trace,
+and curvature.
+
+## Natural cutoff provenance
+
+For the unshifted arbitrary-carrier stencil, the cutoff commutator has support
+contained in the final two stencil positions:
+
+$$
+\operatorname{supp}[B_w,Q_M]x\subseteq\{M-2,M-1\}.
+$$
+
+Both boundary values and both exact corrections are certified. The release
+also proves that two sequences with the same visible prefix can have boundary
+brackets differing by
 
 ```math
-2K_{1/2}-K_1
-=
-\frac12\varepsilon_A\varepsilon_B.
+\frac{w_{k+1}}{w_{k+2}}
+\left(x_{k+2}-y_{k+2}\right).
 ```
 
-## Certified core
+This separates an exact correction ledger from a prediction of the unseen
+tail.
 
-The Lean theorem surface is unchanged from `v0.1.1`:
+## New certified modules
 
-- weighted geometric dressing and weighted second-difference bracket;
-- exact invariance of trace and curvature under `x k = c * q^k * g k`;
-- finite scalar TFVD / Green reconstruction;
-- completeness of the passport for the normalized structure `g / g 0`;
-- exact two-coordinate moving-cutoff commutator;
-- connected Richardson identity and the scale-independent guardrail.
+- `ThermalValvePassport.Carrier`
+- `ThermalValvePassport.CarrierCutoff`
 
 ## Validation
 
@@ -55,4 +100,6 @@ lake build --wfail
 lake env lean ThermalValvePassport.lean
 ```
 
-The CI also rejects proof placeholders. This release changes documentation and metadata only; no mathematical theorem or proof term is weakened.
+The CI also rejects proof placeholders. No physical model, numerical threshold,
+prime base, special function, or privileged complex-plane representation is
+introduced into the theorem statements.

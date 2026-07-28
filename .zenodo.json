@@ -1,9 +1,9 @@
 {
   "title": "Thermal Valve Passport",
-  "description": "Independent Lean 4 formalization of a gauge-invariant discrete-curvature passport for geometrically dressed sequences, including TFVD reconstruction, exact cutoff provenance, and connected Richardson cancellation.",
+  "description": "Independent Lean 4 formalization of a carrier-covariant discrete-curvature passport, including arbitrary-carrier TFVD reconstruction, carrier-misspecification guardrails, exact cutoff provenance, and connected Richardson cancellation.",
   "upload_type": "software",
   "license": "Apache-2.0",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "publication_date": "2026-07-28",
   "creators": [
     {
@@ -15,6 +15,7 @@
     "formalized mathematics",
     "discrete curvature",
     "Green reconstruction",
-    "cutoff provenance"
+    "cutoff provenance",
+    "carrier covariance"
   ]
 }

@@ -46,7 +46,6 @@ theorem carrierBracket_div_eq_secondDifference_undress
       secondDifference (carrierUndress w x) k := by
   unfold carrierBracket carrierUndress secondDifference
   field_simp [hw k, hw (k + 1), hw (k + 2)]
-  ring
 
 /-- The carrier bracket removes an arbitrary nonzero dressing exactly. -/
 theorem carrierBracket_dressed
@@ -55,7 +54,6 @@ theorem carrierBracket_dressed
       c * w (k + 1) * secondDifference g k := by
   unfold carrierBracket carrierDressed secondDifference
   field_simp [hw k, hw (k + 1), hw (k + 2)]
-  ring
 
 /-- The carrier trace removes the carrier and global scale. -/
 theorem carrierTrace_dressed
@@ -64,7 +62,6 @@ theorem carrierTrace_dressed
     carrierTrace w (carrierDressed c w g) = g 1 / g 0 := by
   unfold carrierTrace carrierDressed
   field_simp [hw 0, hw 1, hc, hg0]
-  ring
 
 /-- The normalized carrier curvature is the normalized structural curvature. -/
 theorem carrierCurvature_dressed
@@ -76,7 +73,6 @@ theorem carrierCurvature_dressed
   rw [carrierBracket_dressed c w g k hw]
   unfold carrierDressed
   field_simp [hw 0, hw (k + 1), hc, hg0]
-  ring
 
 namespace Passport
 
@@ -143,7 +139,6 @@ theorem carrierDressed_factor_through_relative
   funext n
   unfold carrierDressed relativeCarrierStructure
   field_simp [hsupplied n]
-  ring
 
 namespace Passport
 
@@ -197,7 +192,7 @@ theorem carrierScalarReconstruction
   calc
     x n = w n * carrierUndress w x n := by
       unfold carrierUndress
-      field_simp [hw n] <;> ring
+      field_simp [hw n]
     _ = w n *
         (carrierUndress w x 0 +
           (n : K) *
@@ -225,7 +220,7 @@ theorem geometricCarrier_ratio_succ
   rw [hstep]
   have hk : geometricCarrier q k ≠ 0 := by
     simpa [geometricCarrier] using pow_ne_zero k hq
-  field_simp [hk] <;> ring
+  field_simp [hk]
 
 theorem geometricCarrier_ratio_next
     (q : K) (k : ℕ) (hq : q ≠ 0) :
@@ -238,7 +233,7 @@ theorem geometricCarrier_ratio_next
   rw [hstep]
   have hk1 : geometricCarrier q (k + 1) ≠ 0 := by
     simpa [geometricCarrier] using pow_ne_zero (k + 1) hq
-  field_simp [hq, hk1] <;> ring
+  field_simp [hq, hk1]
 
 /-- The carrier bracket specializes to the existing geometric bracket. -/
 theorem carrierBracket_geometric

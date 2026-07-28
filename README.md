@@ -24,26 +24,26 @@ $$
 
 satisfies the exact dressing-removal identity
 
-$$
+```math
 B_q x(k)
 = c q^{k+1}\bigl(g_{k+2} - 2g_{k+1} + g_k\bigr).
-$$
+```
 
 The passport stores the boundary trace and the normalized weighted curvature:
 
-$$
+```math
 \tau_q(x) = \frac{x_1}{q x_0},
 \qquad
 \kappa_q(x;k) = \frac{B_q x(k)}{q^{k+1}x_0}.
-$$
+```
 
 Whenever $c \neq 0$, $q \neq 0$, and $g_0 \neq 0$,
 
-$$
+```math
 \tau_q(x) = \frac{g_1}{g_0},
 \qquad
 \kappa_q(x;k) = \frac{\Delta^2 g(k)}{g_0}.
-$$
+```
 
 Thus the geometric factor $q^k$ and the global scale $c$ disappear from the passport.
 
@@ -51,21 +51,21 @@ Thus the geometric factor $q^k$ and the global scale $c$ disappear from the pass
 
 The normalized structural sequence is reconstructed from trace and curvature by
 
-$$
+```math
 \operatorname{reconstruct}(\mathcal P_q(x),n)
 = \frac{g_n}{g_0}.
-$$
+```
 
 Consequently, equal passports force equal normalized structures:
 
-$$
+```math
 \mathcal P_{q_1}\!\left(c_1 q_1^{\bullet}g\right)
 =
 \mathcal P_{q_2}\!\left(c_2 q_2^{\bullet}h\right)
 \quad\Longrightarrow\quad
 \frac{g_n}{g_0} = \frac{h_n}{h_0}
 \quad\text{for every }n.
-$$
+```
 
 > [!IMPORTANT]
 > The passport is not merely a heuristic fingerprint. Inside the dressed class $x_k=cq^kg_k$, it is a complete invariant of the normalized structural sequence.
@@ -74,13 +74,13 @@ $$
 
 The finite scalar Teorema Fundamental da Válvula Discreta is
 
-$$
+```math
 x_n
 =
 q^n\left(x_0+n\,d_qx(0)\right)
 +
 \sum_{j<n}(n-1-j)q^{n-1-j}B_qx(j),
-$$
+```
 
 where
 
@@ -94,19 +94,19 @@ It separates the state into a trace-return channel and a causal Green reconstruc
 
 For the prefix cutoff $Q_M$, the commutator $[B_q,Q_M]$ is supported on exactly two consecutive output coordinates:
 
-$$
+```math
 [B_q,Q_M]x(M-1)=-q^{-1}x_M,
 \qquad
 [B_q,Q_M]x(M)=qx_{M-1}.
-$$
+```
 
 Therefore the final interior bracket coordinate has the exact correction
 
-$$
+```math
 B_qx(M-1)
 =
 B_q(Q_Mx)(M-1)+q^{-1}x_M.
-$$
+```
 
 ## Connected Richardson filter
 
@@ -118,11 +118,11 @@ $$
 
 the connected cumulant obeys
 
-$$
+```math
 2K_{1/2}-K_1
 =
 \frac12\varepsilon_A\varepsilon_B.
-$$
+```
 
 A scale-independent readout instead satisfies
 

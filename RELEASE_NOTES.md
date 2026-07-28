@@ -1,34 +1,43 @@
-# Thermal Valve Passport v0.1.1
+# Thermal Valve Passport v0.1.2
 
-Documentation-rendering release for the independent Lean 4 formalization of the Thermal Valve Passport.
+Targeted Markdown-rendering patch for the independent Lean 4 formalization of the Thermal Valve Passport.
 
-## GitHub Markdown rendering
+## Multiline mathematics
 
-- converts display mathematics from `\[`…`\]` to GitHub-supported `$$` delimiters;
-- uses `$...$` for inline mathematics;
-- restructures `README.md` into a rendered overview of invariance, completeness, TFVD, cutoff provenance, and Richardson cancellation;
-- expands `docs/FORMALIZATION.md` into a theorem-by-theorem map with GitHub-rendered equations;
-- adds direct links from the README to the certified Lean modules and formalization map.
+- keeps short display equations in the existing `$$...$$` form;
+- converts only multiline display equations to GitHub's fenced `math` syntax;
+- fixes the formulas that were being split into headings and raw LaTeX on narrow web layouts;
+- preserves every theorem statement, formula, link, and explanatory paragraph.
 
-The central rendered identity is
+The corrected multiline displays include the completeness theorem,
 
-$$
-B_q\!\left(cq^{\bullet}g\right)(k)
-=
-cq^{k+1}\Delta^2g(k),
-$$
-
-and the completeness theorem is displayed as
-
-$$
+```math
 \operatorname{reconstruct}\!\left(\mathcal P_q(cq^{\bullet}g),n\right)
 =
-\frac{g_n}{g_0}.
-$$
+\frac{g_n}{g_0},
+```
+
+the scalar TFVD reconstruction,
+
+```math
+x_n
+=
+q^n\left(x_0+n\,d_qx(0)\right)
++
+\sum_{j<n}(n-1-j)q^{n-1-j}B_qx(j),
+```
+
+and the connected Richardson identity,
+
+```math
+2K_{1/2}-K_1
+=
+\frac12\varepsilon_A\varepsilon_B.
+```
 
 ## Certified core
 
-The Lean theorem surface is unchanged from `v0.1.0`:
+The Lean theorem surface is unchanged from `v0.1.1`:
 
 - weighted geometric dressing and weighted second-difference bracket;
 - exact invariance of trace and curvature under `x k = c * q^k * g k`;

@@ -353,13 +353,244 @@ $$
 
 Hence Richardson cancellation isolates connected information only after the required common scale law has been established; it cannot manufacture connected structure from a scale-independent detector.
 
+## 7. Carrier-covariant passport
+
+### Definitions
+
+```lean
+carrierDressed
+carrierUndress
+carrierBracket
+carrierTrace
+carrierCurvature
+Passport.ofCarrierObservation
+```
+
+For an arbitrary nonzero carrier $w$, the bracket is
+
+```math
+B_wx(k)
+=
+\frac{w_{k+1}}{w_{k+2}}x_{k+2}
+-2x_{k+1}
++\frac{w_{k+1}}{w_k}x_k.
+```
+
+### Theorems
+
+```lean
+carrierBracket_div_eq_secondDifference_undress
+carrierBracket_dressed
+carrierTrace_dressed
+carrierCurvature_dressed
+Passport.ofCarrierObservation_dressed
+Passport.invariant_under_carrier
+Passport.reconstruct_carrierObservation
+```
+
+The bracket is the ordinary curvature of the undressed observation, redressed
+at the middle stencil coordinate:
+
+```math
+\frac{B_wx(k)}{w_{k+1}}
+=
+\Delta^2\!\left(\frac{x}{w}\right)(k).
+```
+
+For $x_k=cw_kg_k$,
+
+```math
+\boxed{
+B_wx(k)=c\,w_{k+1}\Delta^2g(k)
+}
+```
+
+and
+
+```math
+\boxed{
+\tau_w(x)=\frac{g_1}{g_0},
+\qquad
+\kappa_w(x;k)=\frac{\Delta^2g(k)}{g_0}.
+}
+```
+
+Therefore arbitrary-carrier passport extraction equals the same canonical
+normalized passport already reconstructed by `Passport.reconstruct`.
+
+## 8. Carrier misspecification
+
+### Definition
+
+```lean
+relativeCarrierStructure
+```
+
+The residual structure produced by a supplied carrier $\widetilde w$ and an
+actual carrier $w$ is
+
+$$
+g_k^{\mathrm{res}}
+=
+\frac{w_k}{\widetilde w_k}g_k.
+$$
+
+### Theorems
+
+```lean
+carrierDressed_factor_through_relative
+Passport.ofCarrierObservation_misspecified
+```
+
+They prove the exact factorization
+
+```math
+c\,w_{\bullet}g
+=
+c\,\widetilde w_{\bullet}
+\left(\frac{w_{\bullet}}{\widetilde w_{\bullet}}g\right)
+```
+
+and the passport identity
+
+```math
+\boxed{
+\mathcal P_{\widetilde w}(c\,w_{\bullet}g)
+=
+\mathcal P_{\mathrm{norm}}\!\left(
+\frac{w_{\bullet}}{\widetilde w_{\bullet}}g
+\right).
+}
+```
+
+This is a falsification guardrail: carrier error is transferred into the
+reported structure rather than being silently removed.
+
+## 9. Carrier TFVD and geometric specialization
+
+### Definitions
+
+```lean
+carrierReturn
+carrierGreen
+geometricCarrier
+```
+
+### Theorems
+
+```lean
+carrierScalarReconstruction
+geometricCarrier_ratio_succ
+geometricCarrier_ratio_next
+carrierBracket_geometric
+carrierTrace_geometric
+carrierCurvature_geometric
+```
+
+The arbitrary-carrier scalar reconstruction is
+
+```math
+\boxed{
+x_n
+=
+w_n\left[
+\frac{x_0}{w_0}
++n\left(\frac{x_1}{w_1}-\frac{x_0}{w_0}\right)
++\sum_{j<n}(n-1-j)\frac{B_wx(j)}{w_{j+1}}
+\right].
+}
+```
+
+For $w_k=q^k$, the new bracket, trace, and curvature agree with
+`weightedBracket`, `thermalTraceRatio`, and `thermalCurvature`. Thus the
+arbitrary-carrier development is a strict generalization of the original
+geometric library.
+
+## 10. Natural carrier cutoff and tail provenance
+
+### Definition
+
+```lean
+carrierCutoffCommutator
+```
+
+This module uses the natural, unshifted stencil index:
+
+$$
+[B_w,Q_M]x(k)=B_w(Q_Mx)(k)-Q_M(B_wx)(k).
+$$
+
+### Theorems
+
+```lean
+carrierCutoffCommutator_interior
+carrierCutoffCommutator_firstBoundary
+carrierCutoffCommutator_secondBoundary
+carrierCutoffCommutator_exterior
+carrierCutoffCommutator_support_subset
+carrierBracket_firstBoundary_correction
+carrierBracket_secondBoundary_correction
+carrierBracket_difference_of_same_prefix
+carrierCutoffCommutator_geometric
+```
+
+For $M=k+2$, the two possible boundary values are
+
+```math
+\boxed{
+[B_w,Q_{k+2}]x(k)
+=
+-\frac{w_{k+1}}{w_{k+2}}x_{k+2}
+}
+```
+
+and
+
+```math
+\boxed{
+[B_w,Q_{k+2}]x(k+1)
+=
+2x_{k+2}
+-\frac{w_{k+2}}{w_{k+3}}x_{k+3}.
+}
+```
+
+Hence
+
+$$
+\operatorname{supp}[B_w,Q_{k+2}]x
+\subseteq\{k,k+1\}.
+$$
+
+The inclusion is intentionally not stated as equality: either boundary value
+may vanish.
+
+The original `Cutoff` module reserves output coordinate zero, so its two
+stencil positions are shifted to $\{M-1,M\}$. The natural carrier convention
+reports the same positions as $\{M-2,M-1\}$.
+
+Finally, if $Q_{k+2}x=Q_{k+2}y$, then
+
+```math
+\boxed{
+B_wx(k)-B_wy(k)
+=
+\frac{w_{k+1}}{w_{k+2}}
+\left(x_{k+2}-y_{k+2}\right).
+}
+```
+
+The visible prefix therefore does not determine the missing tail value. An
+exact boundary correction that consumes that value is a ledger with explicit
+provenance, not a tail predictor.
+
 ## Certified dependency chain
 
 ```math
 \boxed{
-\text{dressing}
+\text{arbitrary carrier dressing}
 \longrightarrow
-\text{weighted bracket}
+\text{carrier bracket}
 \longrightarrow
 \text{passport invariance}
 \longrightarrow
@@ -374,7 +605,9 @@ with two independent guardrail layers:
 ```math
 \boxed{
 \text{cutoff provenance}
-\qquad\text{and}\qquad
+\qquad
+\text{carrier misspecification}
+\qquad
 \text{Richardson admissibility}.
 }
 ```

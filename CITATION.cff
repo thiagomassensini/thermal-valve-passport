@@ -8,7 +8,7 @@ authors:
 repository-code: "https://github.com/thiagomassensini/thermal-valve-passport"
 url: "https://github.com/thiagomassensini/thermal-valve-passport"
 license: Apache-2.0
-version: 0.1.1
+version: 0.1.2
 date-released: 2026-07-28
 keywords:
   - Lean 4

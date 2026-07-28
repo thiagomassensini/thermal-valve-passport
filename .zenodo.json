@@ -3,6 +3,8 @@
   "description": "Independent Lean 4 formalization of a gauge-invariant discrete-curvature passport for geometrically dressed sequences, including TFVD reconstruction, exact cutoff provenance, and connected Richardson cancellation.",
   "upload_type": "software",
   "license": "Apache-2.0",
+  "version": "0.1.1",
+  "publication_date": "2026-07-28",
   "creators": [
     {
       "name": "Massensini, Thiago"

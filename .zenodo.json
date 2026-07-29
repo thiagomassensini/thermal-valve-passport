@@ -1,9 +1,9 @@
 {
   "title": "Thermal Valve Passport",
-  "description": "Independent Lean 4 formalization of a carrier-covariant discrete-curvature passport, including nonuniform-mesh reconstruction and completeness, explicit Richardson scale-law guardrails, reciprocal-root reflected kernels, arbitrary-carrier TFVD reconstruction, carrier-misspecification guardrails, and exact cutoff provenance.",
+  "description": "Independent Lean 4 formalization of a carrier-covariant discrete-curvature passport, including bilateral integer-indexed carrier invariance, paired-product and ratio channels, symmetric cutoff ledgers, nonuniform-mesh reconstruction, Richardson scale-law guardrails, reciprocal-root kernels, arbitrary-carrier TFVD reconstruction, and exact cutoff provenance.",
   "upload_type": "software",
   "license": "Apache-2.0",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publication_date": "2026-07-29",
   "creators": [
     {
@@ -19,6 +19,8 @@
     "carrier covariance",
     "nonuniform mesh",
     "Richardson extrapolation",
-    "reflected recurrence"
+    "reflected recurrence",
+    "bilateral carrier",
+    "symmetric cutoff"
   ]
 }

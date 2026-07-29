@@ -7,3 +7,4 @@ import ThermalValvePassport.CarrierCutoff
 import ThermalValvePassport.Nonuniform
 import ThermalValvePassport.ScaleLaw
 import ThermalValvePassport.Reflected
+import ThermalValvePassport.Bilateral

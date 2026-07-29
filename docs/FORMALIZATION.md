@@ -695,6 +695,115 @@ The coefficient \(q+q^{-1}\) annihilates both reciprocal roots and their
 finite reflected kernel. A coefficient mismatch appears as an exact local
 residual rather than being erased.
 
+## 14. Bilateral carrier passport
+
+### Definitions
+
+```lean
+reflectedSequence
+bilateralDressed
+pairedProduct
+pairedRatio
+evenChannel
+oddChannel
+pairedProductNat
+pairedStructuralProduct
+pairedCurvature
+pairedReconstruction
+symmetricTruncate
+symmetricTail
+pairedPrefixSum
+pairedTailSum
+pairedCurvatureCutoffCommutator
+```
+
+For \(x_n=cq^ng_n\) on \(n\in\mathbb Z\), the two multiplicative channels are
+
+```math
+\Pi_x(n)=\frac{x_nx_{-n}}{x_0^2},
+\qquad
+\rho_x(n)=\frac{x_n}{x_{-n}}.
+```
+
+### Theorems
+
+```lean
+reflectedSequence_reflectedSequence
+evenChannel_neg
+oddChannel_neg
+evenChannel_add_oddChannel
+pairedProduct_neg
+pairedProduct_zero
+zpow_mul_reflection
+zpow_double_mul_reflection
+pairedProduct_bilateralDressed
+pairedProduct_invariant_under_redressing
+pairedRatio_bilateralDressed
+pairedRatio_bilateralDressed_of_symmetric
+pairedRatio_under_redressing
+pairedProductNat_bilateralDressed
+pairedCurvature_bilateralDressed
+pairedReconstruction_exact
+symmetricTruncate_inside
+symmetricTruncate_outside
+symmetricTruncate_reflection
+symmetricTruncate_add_tail
+symmetricDecomposition
+symmetricTruncate_idempotent
+symmetricTruncate_support_subset
+pairedProduct_symmetricTruncate
+pairedProductNat_symmetricTruncate
+pairedPrefixSum_add_pairedTailSum
+carrierBracket_one
+pairedCurvatureCutoffCommutator_eq
+pairedCurvatureCutoffCommutator_firstBoundary
+pairedCurvatureCutoffCommutator_secondBoundary
+pairedCurvatureCutoffCommutator_support_subset
+```
+
+The carrier-free paired-product law is
+
+```math
+\boxed{
+\Pi_{cq^\bullet g}(n)
+=
+\frac{g_ng_{-n}}{g_0^2}
+}
+```
+
+without square roots or logarithms. The complementary ratio law is
+
+```math
+\boxed{
+\rho_{cq^\bullet g}(n)
+=
+q^{2n}\frac{g_n}{g_{-n}}
+}
+```
+
+under the explicit hypothesis \(g_{-n}\ne0\). If \(g_n=g_{-n}\), it reduces
+to \(q^{2n}\).
+
+Restricting \(\Pi_x\) to nonnegative indices gives an ordinary sequence whose
+initial two values and second differences reconstruct every coordinate
+exactly. A symmetric cutoff \(Q_M\), defined by \(|n|\le M\), becomes the
+ordinary natural prefix cutoff at \(M+1\) after applying the paired product.
+The finite ledger is
+
+```math
+\boxed{
+\sum_{k=0}^{L}\Pi_x(k)
+=
+\sum_{k=0}^{M}\Pi_x(k)
++
+\sum_{k=M+1}^{L}\Pi_x(k)
+}
+```
+
+for \(M\le L\). The induced curvature/cutoff commutator is supported in the
+last two stencil positions; the support statement is an inclusion because
+either boundary value may vanish.
+
 ## Certified dependency chain
 
 ```math

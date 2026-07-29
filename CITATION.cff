@@ -8,7 +8,7 @@ authors:
 repository-code: "https://github.com/thiagomassensini/thermal-valve-passport"
 url: "https://github.com/thiagomassensini/thermal-valve-passport"
 license: Apache-2.0
-version: 0.3.0
+version: 0.4.0
 date-released: 2026-07-29
 keywords:
   - Lean 4
@@ -19,4 +19,6 @@ keywords:
   - nonuniform mesh
   - Richardson extrapolation
   - reflected recurrence
+  - bilateral carrier
+  - symmetric cutoff
   - formalized mathematics

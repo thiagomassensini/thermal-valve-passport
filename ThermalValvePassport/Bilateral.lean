@@ -50,6 +50,7 @@ def oddChannel (x : ℤ → K) (n : ℤ) : K :=
   (x n - x (-n)) / 2
 
 /-- Reflection is an involution. -/
+omit [Field K] in
 @[simp] theorem reflectedSequence_reflectedSequence (x : ℤ → K) :
     reflectedSequence (reflectedSequence x) = x := by
   funext n
@@ -116,7 +117,7 @@ theorem pairedProduct_bilateralDressed
   by_cases hg0 : g 0 = 0
   · simp [pairedProduct, bilateralDressed, hg0]
   · unfold pairedProduct bilateralDressed
-    simp only [neg_zero, zpow_zero, mul_one]
+    simp only [zpow_zero, mul_one]
     have hpair : q ^ n * q ^ (-n) = (1 : K) :=
       zpow_mul_reflection q n hq
     have hnum :
@@ -133,7 +134,7 @@ theorem pairedProduct_bilateralDressed
     have hden : (c * g 0) ^ 2 = c ^ 2 * (g 0) ^ 2 := by
       ring
     rw [hden]
-    field_simp [hc, hg0] <;> ring
+    field_simp [hc, hg0]
 
 /-- Redressing by any second nonzero scale and fugacity preserves the paired
 product. -/
@@ -164,7 +165,7 @@ theorem pairedRatio_bilateralDressed
           rw [hpow]
     _ = (q ^ (2 * n) * (g n / g (-n))) *
           (c * q ^ (-n) * g (-n)) := by
-            field_simp [hgneg] <;> ring
+            field_simp [hgneg]
 
 /-- Under reflection symmetry of the structural channel, the ratio recovers
 the doubled bilateral carrier exactly. -/
@@ -341,6 +342,13 @@ def pairedCurvatureCutoffCommutator
     (M : ℕ) (x : ℤ → K) (k : ℕ) : K :=
   carrierCutoffCommutator (fun _ => 1) M (pairedProductNat x) k
 
+/-- The unit carrier bracket is the ordinary second difference, as an
+equality of operators. -/
+theorem carrierBracket_one (x : ℕ → K) :
+    carrierBracket (fun _ => (1 : K)) x = secondDifference x := by
+  funext k
+  simp [carrierBracket, secondDifference]
+
 /-- The paired commutator is exactly the ordinary second-difference cutoff
 commutator. -/
 theorem pairedCurvatureCutoffCommutator_eq
@@ -348,9 +356,8 @@ theorem pairedCurvatureCutoffCommutator_eq
     pairedCurvatureCutoffCommutator M x k =
       secondDifference (truncate M (pairedProductNat x)) k -
         truncate M (secondDifference (pairedProductNat x)) k := by
-  simp [pairedCurvatureCutoffCommutator, carrierCutoffCommutator,
-    carrierBracket, secondDifference]
-  ring
+  unfold pairedCurvatureCutoffCommutator carrierCutoffCommutator
+  rw [carrierBracket_one, carrierBracket_one]
 
 /-- First exact boundary value of the paired-curvature cutoff defect. -/
 theorem pairedCurvatureCutoffCommutator_firstBoundary

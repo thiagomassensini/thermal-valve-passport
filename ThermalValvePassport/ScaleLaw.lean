@@ -87,7 +87,8 @@ theorem firstRichardson_affineScale
         (affineScaleReadout target error (h / 2)) =
       target := by
   unfold firstRichardson affineScaleReadout
-  field_simp [h2] <;> ring
+  field_simp [h2]
+  ring
 
 /-- Second Richardson combination for a quadratic leading error. -/
 def secondRichardson (coarse fine : K) : K :=
@@ -122,7 +123,8 @@ theorem secondRichardson_quadraticScale
         (quadraticScaleReadout target error (h / 2)) =
       target := by
   unfold secondRichardson quadraticScaleReadout
-  field_simp [h2, h3] <;> ring
+  field_simp [h2, h3]
+  ring
 
 end
 

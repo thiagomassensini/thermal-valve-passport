@@ -23,15 +23,23 @@ namespace ThermalValvePassport
 
 noncomputable section
 
-variable {K : Type*} [Field K]
-
-/-- Bilateral geometric dressing on integer indices. -/
-def bilateralDressed (c q : K) (g : ℤ → K) (n : ℤ) : K :=
-  c * q ^ n * g n
+variable {K : Type*}
 
 /-- Reflection of an integer-indexed sequence. -/
 def reflectedSequence (x : ℤ → K) (n : ℤ) : K :=
   x (-n)
+
+/-- Reflection is an involution. -/
+@[simp] theorem reflectedSequence_reflectedSequence (x : ℤ → K) :
+    reflectedSequence (reflectedSequence x) = x := by
+  funext n
+  simp [reflectedSequence]
+
+variable [Field K]
+
+/-- Bilateral geometric dressing on integer indices. -/
+def bilateralDressed (c q : K) (g : ℤ → K) (n : ℤ) : K :=
+  c * q ^ n * g n
 
 /-- Multiplicative reflection-even channel, normalized at the origin. -/
 def pairedProduct (x : ℤ → K) (n : ℤ) : K :=
@@ -48,13 +56,6 @@ def evenChannel (x : ℤ → K) (n : ℤ) : K :=
 /-- Additive reflection-odd component. -/
 def oddChannel (x : ℤ → K) (n : ℤ) : K :=
   (x n - x (-n)) / 2
-
-/-- Reflection is an involution. -/
-omit [Field K] in
-@[simp] theorem reflectedSequence_reflectedSequence (x : ℤ → K) :
-    reflectedSequence (reflectedSequence x) = x := by
-  funext n
-  simp [reflectedSequence]
 
 /-- The additive even channel is reflection invariant. -/
 @[simp] theorem evenChannel_neg (x : ℤ → K) (n : ℤ) :

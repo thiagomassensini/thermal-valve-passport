@@ -218,6 +218,68 @@ $$
 
 so Richardson does not manufacture connected information when no scale law is present.
 
+## Nonuniform meshes
+
+For samples on an arbitrary mesh \(m_k\), the divided slope and curvature are
+
+```math
+s_k
+=
+\frac{x_{k+1}-x_k}{m_{k+1}-m_k},
+\qquad
+\kappa_k
+=
+\frac{2}{m_{k+2}-m_k}(s_{k+1}-s_k).
+```
+
+On nondegenerate meshes, the nonuniform passport stores \(x_0\), \(s_0\),
+and all \(\kappa_k\). Lean proves exact reconstruction, injectivity, affine
+gauge invariance, cross-gauge cancellation, and the completeness statement
+
+```math
+\kappa_k=0\ \text{for every }k
+\quad\Longrightarrow\quad
+x_k=a+b\,m_k.
+```
+
+Equal spacing and an ordered field are not required.
+
+## Explicit scale-law guardrails
+
+For a normalized prefix \(C_M=1-T_M\),
+
+```math
+2C_{2M}-C_M
+=
+1+T_M-2T_{2M}.
+```
+
+Consequently,
+
+```math
+2C_{2M}-C_M=1
+\quad\Longleftrightarrow\quad
+2T_{2M}=T_M.
+```
+
+The library also proves if-and-only-if admissibility conditions for first- and
+second-order Richardson extrapolation, then derives exact cancellation from
+explicit affine and quadratic scale laws.
+
+## Reflected reciprocal-root kernels
+
+The reflected bracket
+
+```math
+R_\lambda x(n)=x_{n+2}-\lambda x_{n+1}+x_n,
+\qquad
+\lambda=q+q^{-1},
+```
+
+annihilates both reciprocal modes, their full two-root return, and the finite
+reflected kernel. Reading a kernel through the wrong reciprocal-root
+coefficient produces an exact, certified local mismatch term.
+
 ## Certified modules
 
 - [`ThermalValvePassport.Core`](ThermalValvePassport/Core.lean): dressing, trace, curvature, and passport invariance;
@@ -226,6 +288,9 @@ so Richardson does not manufacture connected information when no scale law is pr
 - [`ThermalValvePassport.Richardson`](ThermalValvePassport/Richardson.lean): connected Richardson cancellation and its scale-independent guardrail;
 - [`ThermalValvePassport.Carrier`](ThermalValvePassport/Carrier.lean): arbitrary carriers, misspecification guardrail, carrier TFVD, and geometric specialization;
 - [`ThermalValvePassport.CarrierCutoff`](ThermalValvePassport/CarrierCutoff.lean): natural carrier cutoff support, boundary corrections, and prefix non-identifiability.
+- [`ThermalValvePassport.Nonuniform`](ThermalValvePassport/Nonuniform.lean): divided curvature, affine-gauge invariance, exact reconstruction, and completeness on arbitrary meshes;
+- [`ThermalValvePassport.ScaleLaw`](ThermalValvePassport/ScaleLaw.lean): exact Richardson admissibility and first-/second-order scale-law cancellation;
+- [`ThermalValvePassport.Reflected`](ThermalValvePassport/Reflected.lean): reciprocal-root returns, reflected kernels, and mismatch identities.
 
 A theorem-by-theorem map is available in [`docs/FORMALIZATION.md`](docs/FORMALIZATION.md).
 

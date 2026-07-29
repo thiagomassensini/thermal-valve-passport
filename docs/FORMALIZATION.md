@@ -584,6 +584,117 @@ The visible prefix therefore does not determine the missing tail value. An
 exact boundary correction that consumes that value is a ledger with explicit
 provenance, not a tail predictor.
 
+## 11. Nonuniform-mesh passport
+
+### Definitions
+
+```lean
+dividedSlope
+dividedCurvature
+affineOnMesh
+addAffineGauge
+additiveObservation
+NonuniformPassport
+NonuniformPassport.ofObservation
+NonuniformPassport.reconstructedSlope
+NonuniformPassport.reconstruct
+```
+
+For arbitrary mesh coordinates \(m_k\),
+
+```math
+s_k=\frac{x_{k+1}-x_k}{m_{k+1}-m_k},
+\qquad
+\kappa_k
+=
+\frac{2}{m_{k+2}-m_k}(s_{k+1}-s_k).
+```
+
+### Theorems
+
+```lean
+dividedSlope_affine
+dividedCurvature_affine
+dividedSlope_addAffineGauge
+dividedCurvature_addAffineGauge
+additiveObservation_difference
+dividedCurvature_crossGaugeDifference
+dividedCurvature_to_slopeIncrement
+NonuniformPassport.initialSlope_add_curvature_sum
+NonuniformPassport.reconstructedSlope_ofObservation
+NonuniformPassport.reconstruct_ofObservation
+NonuniformPassport.ofObservation_injective
+NonuniformPassport.eq_affineOnMesh_of_dividedCurvature_eq_zero
+```
+
+The passport \((x_0,s_0,\kappa)\) reconstructs every sampled coordinate
+exactly. Hence passport equality implies observation equality, and zero
+curvature forces the unique affine mesh profile fixed by the first value and
+first divided slope.
+
+## 12. Richardson scale-law admissibility
+
+### Definitions
+
+```lean
+prefixFromTail
+firstRichardson
+affineScaleReadout
+secondRichardson
+quadraticScaleReadout
+```
+
+### Theorems
+
+```lean
+firstRichardson_prefix_identity
+firstRichardson_prefix_eq_one_iff
+firstRichardson_prefix_eq_one_iff_half
+firstRichardson_eq_target_iff
+firstRichardson_affineScale
+secondRichardson_eq_target_iff
+secondRichardson_quadraticScale
+```
+
+For \(C_M=1-T_M\),
+
+```math
+2C_{2M}-C_M=1+T_M-2T_{2M},
+```
+
+so exact recovery of one is equivalent to the required tail relation. The
+first- and second-order cancellation theorems are consequences of explicit
+affine and quadratic scale laws.
+
+## 13. Reflected reciprocal-root recurrence
+
+### Definitions
+
+```lean
+reflectedLambda
+reflectedBracket
+reflectedReturn
+reflectedThermalKernel
+affineProfile
+```
+
+### Theorems
+
+```lean
+reflectedBracket_change_lambda
+reflectedBracket_geometric
+reflectedBracket_inverseGeometric
+reflectedBracket_reflectedReturn
+reflectedBracket_reflectedThermalKernel
+reflectedBracket_kernel_mismatch
+secondDifference_affineProfile
+secondDifference_sub_profile_eq_zero
+```
+
+The coefficient \(q+q^{-1}\) annihilates both reciprocal roots and their
+finite reflected kernel. A coefficient mismatch appears as an exact local
+residual rather than being erased.
+
 ## Certified dependency chain
 
 ```math

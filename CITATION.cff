@@ -8,12 +8,15 @@ authors:
 repository-code: "https://github.com/thiagomassensini/thermal-valve-passport"
 url: "https://github.com/thiagomassensini/thermal-valve-passport"
 license: Apache-2.0
-version: 0.2.0
-date-released: 2026-07-28
+version: 0.3.0
+date-released: 2026-07-29
 keywords:
   - Lean 4
   - discrete curvature
   - Green operator
   - cutoff provenance
   - carrier covariance
+  - nonuniform mesh
+  - Richardson extrapolation
+  - reflected recurrence
   - formalized mathematics

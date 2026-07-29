@@ -280,6 +280,46 @@ annihilates both reciprocal modes, their full two-root return, and the finite
 reflected kernel. Reading a kernel through the wrong reciprocal-root
 coefficient produces an exact, certified local mismatch term.
 
+## Bilateral carrier passport
+
+For an integer-indexed observation
+
+$$
+x_n=cq^ng_n,\qquad n\in\mathbb Z,
+$$
+
+the paired product
+
+```math
+\Pi_x(n)
+=
+\frac{x_nx_{-n}}{x_0^2}
+```
+
+removes the global scale and bilateral carrier exactly:
+
+```math
+\Pi_{cq^\bullet g}(n)
+=
+\frac{g_ng_{-n}}{g_0^2}.
+```
+
+The complementary ratio channel satisfies
+
+```math
+\frac{x_n}{x_{-n}}
+=
+q^{2n}\frac{g_n}{g_{-n}},
+```
+
+with the denominator nonzero hypothesis stated explicitly. Under reflection
+symmetry of the structural channel, the ratio is exactly \(q^{2n}\).
+
+Lean also proves additive even/odd reflection decomposition, exact Green
+reconstruction of the nonnegative paired-product channel, symmetric cutoff by
+\(|n|\), finite prefix-tail ledgers, and confinement of the paired-curvature
+cutoff defect to the final two stencil positions.
+
 ## Certified modules
 
 - [`ThermalValvePassport.Core`](ThermalValvePassport/Core.lean): dressing, trace, curvature, and passport invariance;
@@ -291,6 +331,7 @@ coefficient produces an exact, certified local mismatch term.
 - [`ThermalValvePassport.Nonuniform`](ThermalValvePassport/Nonuniform.lean): divided curvature, affine-gauge invariance, exact reconstruction, and completeness on arbitrary meshes;
 - [`ThermalValvePassport.ScaleLaw`](ThermalValvePassport/ScaleLaw.lean): exact Richardson admissibility and first-/second-order scale-law cancellation;
 - [`ThermalValvePassport.Reflected`](ThermalValvePassport/Reflected.lean): reciprocal-root returns, reflected kernels, and mismatch identities.
+- [`ThermalValvePassport.Bilateral`](ThermalValvePassport/Bilateral.lean): integer-indexed carrier invariance, paired-product and ratio channels, reconstruction, and symmetric cutoff provenance.
 
 A theorem-by-theorem map is available in [`docs/FORMALIZATION.md`](docs/FORMALIZATION.md).
 

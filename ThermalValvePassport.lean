@@ -4,3 +4,6 @@ import ThermalValvePassport.Cutoff
 import ThermalValvePassport.Richardson
 import ThermalValvePassport.Carrier
 import ThermalValvePassport.CarrierCutoff
+import ThermalValvePassport.Nonuniform
+import ThermalValvePassport.ScaleLaw
+import ThermalValvePassport.Reflected

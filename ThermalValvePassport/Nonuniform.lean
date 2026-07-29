@@ -37,7 +37,8 @@ theorem dividedSlope_affine
     (hgap : mesh (k + 1) - mesh k ≠ 0) :
     dividedSlope mesh (affineOnMesh a b mesh) k = b := by
   unfold dividedSlope affineOnMesh
-  field_simp [hgap] <;> ring
+  field_simp [hgap]
+  ring
 
 /-- Divided curvature annihilates every affine function of the mesh. -/
 theorem dividedCurvature_affine
@@ -62,7 +63,8 @@ theorem dividedSlope_addAffineGauge
     dividedSlope mesh (addAffineGauge mesh x a b) k =
       dividedSlope mesh x k + b := by
   unfold dividedSlope addAffineGauge affineOnMesh
-  field_simp [hgap] <;> ring
+  field_simp [hgap]
+  ring
 
 /-- Divided curvature is invariant under additive affine gauges. -/
 theorem dividedCurvature_addAffineGauge
@@ -78,16 +80,16 @@ theorem dividedCurvature_addAffineGauge
 
 /-- Additive observation with an affine gauge and a shared structural channel. -/
 def additiveObservation
-    (alpha beta : K) (mesh structure : ℕ → K) (k : ℕ) : K :=
-  alpha - beta * mesh k + structure k
+    (alpha beta : K) (mesh shared : ℕ → K) (k : ℕ) : K :=
+  alpha - beta * mesh k + shared k
 
 /-- Subtracting two observations with the same structure leaves an affine
 cross-gauge quotient. -/
 theorem additiveObservation_difference
     (alpha₁ beta₁ alpha₂ beta₂ : K)
-    (mesh structure : ℕ → K) (k : ℕ) :
-    additiveObservation alpha₁ beta₁ mesh structure k -
-        additiveObservation alpha₂ beta₂ mesh structure k =
+    (mesh shared : ℕ → K) (k : ℕ) :
+    additiveObservation alpha₁ beta₁ mesh shared k -
+        additiveObservation alpha₂ beta₂ mesh shared k =
       (alpha₁ - alpha₂) + (beta₂ - beta₁) * mesh k := by
   unfold additiveObservation
   ring
@@ -96,21 +98,21 @@ theorem additiveObservation_difference
 channel has zero nonuniform divided curvature. -/
 theorem dividedCurvature_crossGaugeDifference
     (alpha₁ beta₁ alpha₂ beta₂ : K)
-    (mesh structure : ℕ → K) (k : ℕ)
+    (mesh shared : ℕ → K) (k : ℕ)
     (hgap₀ : mesh (k + 1) - mesh k ≠ 0)
     (hgap₁ : mesh (k + 2) - mesh (k + 1) ≠ 0) :
     dividedCurvature mesh
         (fun n =>
-          additiveObservation alpha₁ beta₁ mesh structure n -
-            additiveObservation alpha₂ beta₂ mesh structure n) k = 0 := by
+          additiveObservation alpha₁ beta₁ mesh shared n -
+            additiveObservation alpha₂ beta₂ mesh shared n) k = 0 := by
   have hfun :
       (fun n =>
-        additiveObservation alpha₁ beta₁ mesh structure n -
-          additiveObservation alpha₂ beta₂ mesh structure n) =
+        additiveObservation alpha₁ beta₁ mesh shared n -
+          additiveObservation alpha₂ beta₂ mesh shared n) =
         affineOnMesh (alpha₁ - alpha₂) (beta₂ - beta₁) mesh := by
     funext n
     exact additiveObservation_difference
-      alpha₁ beta₁ alpha₂ beta₂ mesh structure n
+      alpha₁ beta₁ alpha₂ beta₂ mesh shared n
   rw [hfun]
   exact dividedCurvature_affine mesh
     (alpha₁ - alpha₂) (beta₂ - beta₁) k hgap₀ hgap₁
@@ -125,7 +127,7 @@ theorem dividedCurvature_to_slopeIncrement
         dividedCurvature mesh x k =
       dividedSlope mesh x (k + 1) - dividedSlope mesh x k := by
   unfold dividedCurvature
-  field_simp [h2, hspan] <;> ring
+  field_simp [h2, hspan]
 
 /-- Value, initial divided slope, and all divided curvatures on a mesh. -/
 @[ext]
@@ -151,7 +153,7 @@ variable {K}
 def reconstructedSlope
     (mesh : ℕ → K) (p : NonuniformPassport K) (n : ℕ) : K :=
   p.initialSlope +
-    ∑ j in Finset.range n,
+    ∑ j ∈ Finset.range n,
       ((mesh (j + 2) - mesh j) / 2) * p.curvature j
 
 /-- Reconstruct the sampled observation recursively from its passport. -/
@@ -169,7 +171,7 @@ theorem initialSlope_add_curvature_sum
     (hspan : ∀ k, mesh (k + 2) - mesh k ≠ 0)
     (n : ℕ) :
     dividedSlope mesh x 0 +
-        ∑ j in Finset.range n,
+        ∑ j ∈ Finset.range n,
           ((mesh (j + 2) - mesh j) / 2) *
             dividedCurvature mesh x j =
       dividedSlope mesh x n := by
@@ -208,7 +210,8 @@ theorem reconstruct_ofObservation
       rw [reconstruct, ih,
         reconstructedSlope_ofObservation mesh x h2 hspan n]
       unfold dividedSlope
-      field_simp [hgap n] <;> ring
+      field_simp [hgap n]
+      ring
 
 /-- On a nondegenerate mesh, the nonuniform passport is a complete invariant
 of the sampled observation. -/

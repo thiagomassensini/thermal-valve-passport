@@ -1,0 +1,85 @@
+name: QGP HEPData pilot
+
+on:
+  push:
+    branches:
+      - experiment/qgp-star-hepdata
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-star-hepdata:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe and fetch STAR thermal-dielectron tables
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qgp-hepdata
+          UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126 Safari/537.36'
+          REF='https://www.hepdata.net/record/ins2755369'
+
+          fetch() {
+            local name="$1"
+            local url="$2"
+            echo "Fetching $url"
+            curl --location --silent --show-error \
+              --user-agent "$UA" \
+              --referer "$REF" \
+              --header 'Accept: application/json,text/csv,text/yaml,text/plain,*/*' \
+              --dump-header "qgp-hepdata/${name}.headers" \
+              --write-out '%{http_code}\n' \
+              "$url" \
+              --output "qgp-hepdata/${name}.body" \
+              > "qgp-hepdata/${name}.status" || true
+          }
+
+          fetch record_json 'https://www.hepdata.net/record/ins2755369?version=1&format=json'
+          fetch table3_ajax 'https://www.hepdata.net/record/data/tabledata/1811120/1'
+          fetch table4_ajax 'https://www.hepdata.net/record/data/tabledata/1811121/1'
+          fetch table3_header 'https://www.hepdata.net/record/data/147195/1811120/1/0'
+          fetch table4_header 'https://www.hepdata.net/record/data/147195/1811121/1/0'
+          fetch table3_csv_v1 'https://www.hepdata.net/download/table/ins2755369/Table%203/1/csv'
+          fetch table4_csv_v1 'https://www.hepdata.net/download/table/ins2755369/Table%204/1/csv'
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          root = Path('qgp-hepdata')
+          report = []
+          for status in sorted(root.glob('*.status')):
+              name = status.stem
+              code = status.read_text().strip()
+              body = root / f'{name}.body'
+              size = body.stat().st_size if body.exists() else 0
+              preview = ''
+              if body.exists():
+                  preview = body.read_text(errors='replace')[:500].replace('\n', ' ')
+              report.append({'name': name, 'status': code, 'bytes': size, 'preview': preview})
+          (root / 'probe_report.json').write_text(json.dumps(report, indent=2))
+          print(json.dumps(report, indent=2))
+
+          for name in ('record_json', 'table3_ajax', 'table4_ajax', 'table3_header', 'table4_header'):
+              path = root / f'{name}.body'
+              if not path.exists():
+                  continue
+              try:
+                  data = json.loads(path.read_text())
+                  (root / f'{name}.keys.txt').write_text('\n'.join(sorted(data.keys())))
+                  print(name, 'keys:', sorted(data.keys()))
+              except Exception as exc:
+                  print(name, 'JSON parse failed:', exc)
+          PY
+
+      - name: Upload probe and any public data retrieved
+        uses: actions/upload-artifact@v4
+        with:
+          name: star-qgp-hepdata-147195
+          path: qgp-hepdata/
+          if-no-files-found: error
+          retention-days: 7
